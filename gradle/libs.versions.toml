@@ -1,0 +1,17 @@
+# Version catalog is a central place for you to declare and version dependencies
+# https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog
+# https://docs.gradle.org/current/userguide/platforms.html#sub::toml-dependencies-format
+
+[versions]
+mockito = "5.20.0"
+lombok = "1.18.42"
+jetbrains-annotations = "26.0.2-1"
+junit-bom = "5.10.0"
+
+[libraries]
+jetbrains-annotations = { module = "org.jetbrains:annotations", version.ref = "jetbrains-annotations" }
+lombok = { module = "org.projectlombok:lombok", version.ref = "lombok"}
+junit-bom = { module = "org.junit:junit-bom", version.ref = "junit-bom"}
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter"}
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher"}
+mockito-core = {module = "org.mockito:mockito-core", version.ref = "mockito"}

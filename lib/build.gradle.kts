@@ -10,16 +10,16 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.jetbrains:annotations:26.0.2-1")
-    compileOnly("org.projectlombok:lombok:1.18.42")
-    annotationProcessor("org.projectlombok:lombok:1.18.42")
+    compileOnly(libs.jetbrains.annotations)
+    compileOnly(libs.lombok)
+    annotationProcessor(libs.lombok)
 
-    testImplementation(platform("org.junit:junit-bom:5.10.0"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
-    testImplementation("org.mockito:mockito-core:5.20.0")
-    testCompileOnly("org.projectlombok:lombok:1.18.42")
-    testAnnotationProcessor("org.projectlombok:lombok:1.18.42")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testImplementation(platform(libs.junit.bom))
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.mockito.core)
+    testCompileOnly(libs.lombok)
+    testAnnotationProcessor(libs.lombok)
+    testRuntimeOnly(libs.junit.platform.launcher)
 }
 
 tasks.test {
