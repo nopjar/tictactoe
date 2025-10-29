@@ -150,6 +150,7 @@ public class Game {
    *
    * @param currentPlayer the current player, or null if there is no current player
    * @return the next player to play
+   * @throws IllegalArgumentException if the passed player is not part of this game
    * @see GameRule#RANDOM_FIRST_PLAYER
    */
   public Player getNextPlayer(@Nullable Player currentPlayer) {

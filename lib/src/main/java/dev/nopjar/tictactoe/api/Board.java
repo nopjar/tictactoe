@@ -57,8 +57,9 @@ public class Board {
   /**
    * Returns the player currently placed in the given cell.
    *
-   * @param cell the cell
+   * @param cell the cell, [0, dimension * dimension - 1]
    * @return the player placed in the cell, or empty if the cell is empty
+   * @throws IndexOutOfBoundsException if the cell is out of bounds
    */
   public Optional<Player> getCell(int cell) {
     return Optional.ofNullable(board[cell]);
