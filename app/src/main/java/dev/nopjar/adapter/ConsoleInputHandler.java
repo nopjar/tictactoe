@@ -19,7 +19,7 @@ public class ConsoleInputHandler implements InputHandler {
   public Move handleInput(Game game, Player player) {
     System.out.print("Enter move for player " + player.getName() + ": ");
     String line = scanner.nextLine();
-    int cell = NotationParser.parseNotation(line.trim());
+    int cell = NotationParser.parseNotation(game, line.trim());
     return new Move(player, cell);
   }
 

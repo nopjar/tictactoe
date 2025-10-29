@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 
 /**
  * Represents the rules used during a game.
+ *
+ * <p>Used to configure some aspects of the game.
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class GameRules {
@@ -27,10 +29,17 @@ public class GameRules {
    * Sets a rule value.
    *
    * @param gameRule the rule to set the value for
-   * @param value    the value to set
+   * @param value    the value to set, not null
    * @param <T>      the type of the value to set
+   * @throws IllegalArgumentException if the value is null
    */
   public <T> void set(GameRule<T> gameRule, T value) {
+    if (value == null) {
+      throw new IllegalArgumentException("Value cannot be null!");
+    }
+    if (gameRule.validator() != null && !gameRule.validator().test(value)) {
+      throw new IllegalArgumentException("Value is not valid!");
+    }
     rules.put(gameRule, value);
   }
 

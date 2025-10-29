@@ -17,7 +17,8 @@ public class RandomAiPlayer extends AiPlayer {
 
   @Override
   public Move nextMove(Game game) {
-    int[] possibleCells = IntStream.range(0, 9)
+    int dimension = game.getBoard().getDimension();
+    int[] possibleCells = IntStream.range(0, dimension * dimension)
         .filter(i -> game.getBoard().getCell(i).isEmpty())
         .toArray();
 

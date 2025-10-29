@@ -11,21 +11,28 @@ public class ConsoleRenderer implements Renderer {
 
   @Override
   public void render(Game game) {
+    int dimension = game.getBoard().getDimension();
     StringBuilder sb = new StringBuilder();
-    sb.append("    a   b   c\n");
-    sb.append("  +---+---+---+\n");
+    // table header
+    sb.append(" ");
+    for (int i = 0; i < dimension; i++) {
+      sb.append("   ").append((char) ('a' + i));
+    }
+    sb.append("\n");
+    sb.append("  ").append("+---".repeat(dimension)).append("+\n");
 
-    for (int row = 0; row < 3; row++) {
+    // table rows
+    for (int row = 0; row < dimension; row++) {
       sb.append(row + 1).append(" |");
-      for (int col = 0; col < 3; col++) {
-        int cell = row * 3 + col;
+      for (int col = 0; col < dimension; col++) {
+        int cell = row * dimension + col;
         String character = game.getBoard().getCell(cell)
             .map(p -> p.getType().name())
             .orElse(" ");
         sb.append(" ").append(character).append(" |");
       }
       sb.append("\n");
-      sb.append("  +---+---+---+\n");
+      sb.append("  ").append("+---".repeat(dimension)).append("+\n");
     }
     System.out.println(sb);
   }

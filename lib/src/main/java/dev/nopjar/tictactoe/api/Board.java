@@ -9,26 +9,37 @@ import org.jetbrains.annotations.TestOnly;
  */
 public class Board {
 
-  private final Player[][] board;
+  private final Player[] board;
+  private final int dimension;
 
-  public Board() {
-    this(new Player[3][3]);
+  public Board(int dimension) {
+    this(new Player[dimension * dimension], dimension);
   }
 
   @TestOnly
-  Board(Player[][] board) {
-    if (board.length != 3 || board[0].length != 3) {
-      throw new IllegalArgumentException("Board must be 3x3!");
+  Board(Player[] board, int dimension) {
+    if (dimension == 0 || board.length != dimension * dimension) {
+      throw new IllegalArgumentException("Invalid board size.");
     }
     this.board = board;
+    this.dimension = dimension;
   }
 
   boolean apply(Move move) {
     if (!validateMove(move)) {
       return false;
     }
-    board[move.cell() / 3][move.cell() % 3] = move.player();
+    board[move.cell()] = move.player();
     return true;
+  }
+
+  /**
+   * Returns the board dimension (n for an n x n board).
+   *
+   * @return the board dimension
+   */
+  public int getDimension() {
+    return dimension;
   }
 
   /**
@@ -40,7 +51,7 @@ public class Board {
    * @return true if the move is valid, false otherwise
    */
   public boolean validateMove(Move move) {
-    return move.cell() >= 0 && move.cell() < 9 && board[move.cell() / 3][move.cell() % 3] == null;
+    return move.cell() >= 0 && move.cell() < board.length && board[move.cell()] == null;
   }
 
   /**
@@ -50,7 +61,7 @@ public class Board {
    * @return the player placed in the cell, or empty if the cell is empty
    */
   public Optional<Player> getCell(int cell) {
-    return Optional.ofNullable(board[cell / 3][cell % 3]);
+    return Optional.ofNullable(board[cell]);
   }
 
   /**
@@ -61,38 +72,64 @@ public class Board {
    * @return the current state
    */
   public BoardState validateCurrentPlacements() {
-    // check rows and columns
-    for (int i = 0; i < 3; i++) {
-      // rows
-      if (board[i][0] != null && board[i][0] == board[i][1] && board[i][1] == board[i][2]) {
-        return BoardState.WINNER;
-      }
-      // columns
-      if (board[0][i] != null && board[0][i] == board[1][i] && board[1][i] == board[2][i]) {
-        return BoardState.WINNER;
-      }
-    }
+    final int totalCells = board.length;
+    final int size = (int) Math.sqrt(totalCells);
+    boolean hasEmpty = false;
 
-    // diagonals
-    if (board[1][1] != null) {
-      if (board[0][0] == board[1][1] && board[1][1] == board[2][2]) {
+    // rows and empties
+    for (int r = 0; r < size; r++) {
+      final int rowStart = r * size;
+      if (isUniformLine(rowStart, 1, size)) {
         return BoardState.WINNER;
       }
-      if (board[0][2] == board[1][1] && board[1][1] == board[2][0]) {
-        return BoardState.WINNER;
-      }
-    }
-
-    // check for empty cells
-    for (int r = 0; r < 3; r++) {
-      for (int c = 0; c < 3; c++) {
-        if (board[r][c] == null) {
-          return BoardState.IN_PROGRESS;
+      for (int c = 0; c < size; c++) {
+        if (board[rowStart + c] == null) {
+          hasEmpty = true;
+          break;
         }
       }
     }
 
-    return BoardState.DRAW;
+    // columns
+    for (int c = 0; c < size; c++) {
+      if (isUniformLine(c, size, size)) {
+        return BoardState.WINNER;
+      }
+    }
+
+    // main diagonal
+    if (isUniformLine(0, size + 1, size)) {
+      return BoardState.WINNER;
+    }
+
+    // anti-diagonal
+    if (isUniformLine(size - 1, size - 1, size)) {
+      return BoardState.WINNER;
+    }
+
+    return hasEmpty ? BoardState.IN_PROGRESS : BoardState.DRAW;
+  }
+
+  /**
+   * Checks whether the same player fills a line on the board (row, column, or diagonal).
+   *
+   * @param start  the starting index in the board array
+   * @param step   the step to move to the next cell in the line
+   * @param length the number of cells in the line
+   * @return true if all cells are occupied by the same non-null player
+   */
+  private boolean isUniformLine(int start, int step, int length) {
+    Player first = board[start];
+    if (first == null) {
+      return false;
+    }
+    int idx = start + step;
+    for (int i = 1; i < length; i++, idx += step) {
+      if (board[idx] != first) {
+        return false;
+      }
+    }
+    return true;
   }
 
   /**

@@ -53,7 +53,7 @@ public class Game {
    * @param rules the rules to use for this game
    */
   public Game(GameRules rules) {
-    this(rules, new ArrayList<>(2), new GameStateService(), new Board());
+    this(rules, new ArrayList<>(2), new GameStateService(), new Board(rules.get(GameRule.BOARD_SIZE)));
   }
 
   @Builder

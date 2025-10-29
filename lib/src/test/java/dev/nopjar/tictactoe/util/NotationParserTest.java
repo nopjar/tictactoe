@@ -13,39 +13,39 @@ class NotationParserTest {
 
   static Stream<Arguments> validNotationArguments() {
     return Stream.of(
-        arguments("a1", 0),
-        arguments("b1", 1),
-        arguments("c1", 2),
-        arguments("a2", 3),
-        arguments("b2", 4),
-        arguments("c2", 5),
-        arguments("a3", 6),
-        arguments("b3", 7),
-        arguments("c3", 8)
+        arguments(3, "a1", 0),
+        arguments(3, "b1", 1),
+        arguments(3, "c1", 2),
+        arguments(3, "a2", 3),
+        arguments(3, "b2", 4),
+        arguments(3, "c2", 5),
+        arguments(3, "a3", 6),
+        arguments(3, "b3", 7),
+        arguments(3, "c3", 8)
     );
   }
 
   @ParameterizedTest
   @MethodSource("validNotationArguments")
-  void givenString_whenValid_thenReturnCorrectCell(String notation, int expectedCell) {
-    assertEquals(expectedCell, NotationParser.parseNotation(notation));
-    assertEquals(expectedCell, NotationParser.parseNotation(notation.toUpperCase()));
+  void givenString_whenValid_thenReturnCorrectCell(int boardDimension, String notation, int expectedCell) {
+    assertEquals(expectedCell, NotationParser.parseNotation(boardDimension, notation));
+    assertEquals(expectedCell, NotationParser.parseNotation(boardDimension, notation.toUpperCase()));
   }
 
   static Stream<Arguments> invalidNotationArguments() {
     return Stream.of(
-        arguments("a0"),
-        arguments("a4"),
-        arguments("e4"),
-        arguments("too_long"),
-        arguments(""),
-        arguments(" ")
+        arguments(3, "a0"),
+        arguments(3, "a4"),
+        arguments(3, "e4"),
+        arguments(3, "too_long"),
+        arguments(3, ""),
+        arguments(3, " ")
     );
   }
 
   @ParameterizedTest
   @MethodSource("invalidNotationArguments")
-  void givenString_whenInvalid_thenThrowException(String notation) {
-    assertThrows(IllegalArgumentException.class, () -> NotationParser.parseNotation(notation));
+  void givenString_whenInvalid_thenThrowException(int boardDimension, String notation) {
+    assertThrows(IllegalArgumentException.class, () -> NotationParser.parseNotation(boardDimension, notation));
   }
 }

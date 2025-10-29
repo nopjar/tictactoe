@@ -45,7 +45,7 @@ class BoardTest {
     // arrange
     Move mockMove = mock(Move.class);
     when(mockMove.cell()).thenReturn(cell);
-    Board underTest = new Board();
+    Board underTest = new Board(3);
 
     // act
     boolean result = underTest.validateMove(mockMove);
@@ -61,7 +61,7 @@ class BoardTest {
     Player mockPlayer = mock(Player.class);
     Move mockMove = mock(Move.class);
     when(mockMove.cell()).thenReturn(cell);
-    Board underTest = new Board();
+    Board underTest = new Board(3);
     underTest.apply(new Move(mockPlayer, cell));
 
     // act
@@ -79,7 +79,7 @@ class BoardTest {
     Move mockMove = mock(Move.class);
     when(mockMove.cell()).thenReturn(cell);
     when(mockMove.player()).thenReturn(mockPlayer);
-    Board underTest = new Board();
+    Board underTest = new Board(3);
 
     // act
     boolean result = underTest.apply(mockMove);
@@ -117,16 +117,26 @@ class BoardTest {
         arguments(new Player.Type[]{X, X, O, null, null, O, null, null, O}, Board.BoardState.WINNER),
         // Diagonal wins
         arguments(new Player.Type[]{X, O, null, O, X, null, null, O, X}, Board.BoardState.WINNER),
-        arguments(new Player.Type[]{null, O, X, null, X, O, X, null, O}, Board.BoardState.WINNER)
+        arguments(new Player.Type[]{null, O, X, null, X, O, X, null, O}, Board.BoardState.WINNER),
+        // 4x4 board cases
+        arguments(new Player.Type[]{X, X, X, X, O, O, null, null, null, null, null, null, null, null, null, null}, Board.BoardState.WINNER),
+        arguments(new Player.Type[]{O, null, null, null, O, null, null, null, O, null, null, null, O, null, null, null}, Board.BoardState.WINNER),
+        arguments(new Player.Type[]{X, O, X, O, O, X, O, X, X, X, O, X, O, X, X, O}, Board.BoardState.DRAW),
+        arguments(new Player.Type[]{X, O, X, null, O, X, O, X, X, X, O, X, O, X, X, O}, Board.BoardState.IN_PROGRESS),
+        // 2x2 board cases (draw not possible)
+        arguments(new Player.Type[]{X, X, O, O}, Board.BoardState.WINNER),
+        arguments(new Player.Type[]{X, X, null, O}, Board.BoardState.WINNER),
+        arguments(new Player.Type[]{X, X, null, null}, Board.BoardState.WINNER),
+        arguments(new Player.Type[]{X, O, null, null}, Board.BoardState.IN_PROGRESS)
     );
   }
 
   @ParameterizedTest
   @MethodSource("validateCurrentPlacementsArguments")
-  void givenBoard_whenValidatingCurrentPlacements_thenReturnCorrectState(@ConvertWith(BoardStateConverter.class) Player[][] boardState,
+  void givenBoard_whenValidatingCurrentPlacements_thenReturnCorrectState(@ConvertWith(BoardStateConverter.class) Player[] boardState,
                                                                          Board.BoardState expectedState) {
     // arrange
-    Board underTest = new Board(boardState);
+    Board underTest = new Board(boardState, (int) Math.sqrt(boardState.length));
 
     // act
     Board.BoardState result = underTest.validateCurrentPlacements();
@@ -141,23 +151,20 @@ class BoardTest {
       if (!(source instanceof Player.Type[] boardState)) {
         throw new ArgumentConversionException("Invalid source type.");
       }
-      if (boardState.length != 9) {
-        throw new ArgumentConversionException("Invalid board state length.");
-      }
 
       Player mockPlayerX = mock(Player.class);
       Player mockPlayerO = mock(Player.class);
-      Player[][] players = new Player[3][3];
+      Player[] players = new Player[boardState.length];
       for (int i = 0; i < boardState.length; i++) {
         if (boardState[i] == null) {
           continue;
         }
         switch (boardState[i]) {
           case X:
-            players[i / 3][i % 3] = mockPlayerX;
+            players[i] = mockPlayerX;
             break;
           case O:
-            players[i / 3][i % 3] = mockPlayerO;
+            players[i] = mockPlayerO;
             break;
         }
       }
