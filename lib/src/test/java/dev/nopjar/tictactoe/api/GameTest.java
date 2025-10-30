@@ -10,13 +10,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import dev.nopjar.tictactoe.domain.service.GameRule;
-import dev.nopjar.tictactoe.domain.service.GameRules;
+import dev.nopjar.tictactoe.domain.service.GameOption;
+import dev.nopjar.tictactoe.domain.service.GameOptions;
 import dev.nopjar.tictactoe.domain.service.GameStateService;
 import dev.nopjar.tictactoe.domain.state.FinishedGameState;
 import dev.nopjar.tictactoe.domain.state.IdleGameState;
@@ -25,16 +24,8 @@ import dev.nopjar.tictactoe.domain.state.PreparationGameState;
 import dev.nopjar.tictactoe.player.Player;
 import dev.nopjar.tictactoe.util.RandomUtils;
 import java.util.ArrayList;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockSettings;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.mockito.MockitoSession;
 
 class GameTest {
 
@@ -205,10 +196,10 @@ class GameTest {
     when(playerMockOne.getType()).thenReturn(Player.Type.X);
     Player playerMockTwo = mock(Player.class);
     when(playerMockTwo.getType()).thenReturn(Player.Type.O);
-    GameRules mockRules = mock(GameRules.class);
-    when(mockRules.get(GameRule.RANDOM_FIRST_PLAYER)).thenReturn(false);
+    GameOptions mockOptions = mock(GameOptions.class);
+    when(mockOptions.get(GameOption.RANDOM_FIRST_PLAYER)).thenReturn(false);
     Game underTest = Game.builder()
-        .rules(mockRules)
+        .options(mockOptions)
         .players(spy(new ArrayList<>(2)))
         .build();
     underTest.registerPlayer(playerMockOne);
@@ -229,10 +220,10 @@ class GameTest {
     when(playerMockOne.getType()).thenReturn(Player.Type.X);
     Player playerMockTwo = mock(Player.class);
     when(playerMockTwo.getType()).thenReturn(Player.Type.O);
-    GameRules mockRules = mock(GameRules.class);
-    when(mockRules.get(GameRule.RANDOM_FIRST_PLAYER)).thenReturn(true);
+    GameOptions mockOptions = mock(GameOptions.class);
+    when(mockOptions.get(GameOption.RANDOM_FIRST_PLAYER)).thenReturn(true);
     Game underTest = Game.builder()
-        .rules(mockRules)
+        .options(mockOptions)
         .players(new ArrayList<>(2))
         .build();
     underTest.registerPlayer(playerMockOne);
@@ -253,8 +244,8 @@ class GameTest {
     when(playerMockOne.getType()).thenReturn(Player.Type.X);
     Player playerMockTwo = mock(Player.class);
     when(playerMockTwo.getType()).thenReturn(Player.Type.O);
-    GameRules mockRules = mock(GameRules.class);
-    when(mockRules.get(GameRule.RANDOM_FIRST_PLAYER)).thenReturn(true);
+    GameOptions mockOptions = mock(GameOptions.class);
+    when(mockOptions.get(GameOption.RANDOM_FIRST_PLAYER)).thenReturn(true);
     Game underTest = Game.builder()
         .players(new ArrayList<>(2))
         .build();

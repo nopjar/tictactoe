@@ -9,7 +9,7 @@ The app module is a minimal console example showing how to use the library.
 - Clean API for board, game, moves
 - Pluggable input handlers and renderers
 - Human and AI players (easy to add more)
-- Simple state machine and rules abstraction (easy to add more states)
+- Simple state machine and options abstraction (easy to add more states)
 - Unit tests for core components
 
 ## Modules

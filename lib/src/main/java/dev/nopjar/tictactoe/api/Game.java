@@ -1,7 +1,7 @@
 package dev.nopjar.tictactoe.api;
 
-import dev.nopjar.tictactoe.domain.service.GameRule;
-import dev.nopjar.tictactoe.domain.service.GameRules;
+import dev.nopjar.tictactoe.domain.service.GameOption;
+import dev.nopjar.tictactoe.domain.service.GameOptions;
 import dev.nopjar.tictactoe.domain.service.GameStateService;
 import dev.nopjar.tictactoe.domain.state.FinishedGameState;
 import dev.nopjar.tictactoe.domain.state.InProgressGameState;
@@ -25,7 +25,7 @@ import org.jetbrains.annotations.UnmodifiableView;
  *
  * <p>This is the main entry point for the library.
  *
- * <p>Here you can register players, renderers, rules, etc. and start the game.
+ * <p>Here you can register players, renderers, options, etc. and start the game.
  */
 public class Game {
 
@@ -34,7 +34,7 @@ public class Game {
   private final Board board;
   @Getter
   private final GameStateService stateService;
-  private final GameRules rules;
+  private final GameOptions options;
   @Getter(value = AccessLevel.PACKAGE, onMethod_ = {@TestOnly})
   private final List<Player> players;
   @Getter(value = AccessLevel.PACKAGE, onMethod_ = {@TestOnly})
@@ -44,22 +44,22 @@ public class Game {
    * Creates a new game with default settings.
    */
   public Game() {
-    this(GameRules.defaults());
+    this(GameOptions.defaults());
   }
 
   /**
-   * Creates a new game with the given rules.
+   * Creates a new game with the given options.
    *
-   * @param rules the rules to use for this game
+   * @param options the options to use for this game
    */
-  public Game(GameRules rules) {
-    this(rules, new ArrayList<>(2), new GameStateService(), new Board(rules.get(GameRule.BOARD_SIZE)));
+  public Game(GameOptions options) {
+    this(options, new ArrayList<>(2), new GameStateService(), new Board(options.get(GameOption.BOARD_SIZE)));
   }
 
   @Builder
   @TestOnly
-  Game(GameRules rules, List<Player> players, GameStateService stateService, Board board) {
-    this.rules = rules;
+  Game(GameOptions options, List<Player> players, GameStateService stateService, Board board) {
+    this.options = options;
     this.players = players;
     this.stateService = stateService;
     this.board = board;
@@ -146,16 +146,16 @@ public class Game {
    * Returns the next player to play.
    *
    * <p>If the current player is null, the first player will be returned, which is either a random player or the first player registered.
-   * This behavior can be configured via {@link GameRules}.
+   * This behavior can be configured via {@link GameOptions}.
    *
    * @param currentPlayer the current player, or null if there is no current player
    * @return the next player to play
    * @throws IllegalArgumentException if the passed player is not part of this game
-   * @see GameRule#RANDOM_FIRST_PLAYER
+   * @see GameOption#RANDOM_FIRST_PLAYER
    */
   public Player getNextPlayer(@Nullable Player currentPlayer) {
     if (currentPlayer == null) {
-      return rules.get(GameRule.RANDOM_FIRST_PLAYER)
+      return options.get(GameOption.RANDOM_FIRST_PLAYER)
           ? RandomUtils.getRandomElement(this.players)
           : this.players.getFirst();
     }
