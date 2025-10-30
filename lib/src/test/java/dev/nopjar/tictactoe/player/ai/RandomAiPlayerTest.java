@@ -26,6 +26,7 @@ class RandomAiPlayerTest {
     RandomAiPlayer underTest = new RandomAiPlayer("test", Player.Type.X);
 
     when(boardMock.getCell(anyInt())).thenReturn(Optional.empty());
+    when(boardMock.getDimension()).thenReturn(3);
     when(mockGame.getBoard()).thenReturn(boardMock);
 
     try (var mockStatic = Mockito.mockStatic(RandomUtils.class)) {
