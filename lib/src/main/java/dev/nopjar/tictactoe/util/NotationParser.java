@@ -14,6 +14,7 @@ public final class NotationParser {
   /**
    * Parses a cell notation of the form {@code [a-z][1-9]} to the cell index in range {@code [0-{board dimension^2 - 1}]}.
    *
+   * @param game     the current game instance
    * @param notation the string representation of the cell
    * @return the cell index
    * @throws IllegalArgumentException if the notation is invalid
